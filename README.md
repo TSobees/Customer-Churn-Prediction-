@@ -1,17 +1,22 @@
 # Customer-Churn-Prediction-
-A machine learning project to predict customer churn integrating Web API FastAPI
+A MACHINE LEARNING PROJECT TO PREDICT CUSTOMER CHURN INTEGRATING WEB API (FASTAPI)
+CUSTOMER CHURN PREDICTION SYSTEM (ML MODEL + FASTAPI WEB API)
 
-#Customer Churn Prediction System (ML Model + FastAPI Web API)
 Dataset source: https://www.kaggle.com/datasets/abdallahwagih/telco-customer-churn?resource=download&select=Telco_customer_churn.xlsx
 
 This project provides an end-to-end Machine Learning solution for predicting customer churn. It includes:
+
 Data preprocessing & feature engineering
+
 Model training & evaluation
+
 SHAP model interpretability
+
 A production-ready FastAPI Web API for real-time predictions
+
 Saved model artifacts (.pkl files) and JSON feature mappings
 
-#This project uses a Logistic Regression classifier, which is a widely used linear model for binary classification problems like churn prediction.
+THIS PROJECT USES A LOGISTIC REGRESSION CLASSIFIER
 
 Why Logistic Regression?
 
@@ -23,18 +28,22 @@ Efficient on large datasets
 
 Stable, reliable probability outputs
 
-#Key Steps in the ML Pipeline
+KEY STEPS IN THE ML PIPELINE
 
-Handling missing data; the missing values where the churn reason which was excluded from the model training
+Handling missing data; the missing values were the churn reason which was excluded from model training
 
 Label encoding & One-Hot Encoding
+
 Export of correct column order via model_columns.json
 
 Fitting Logistic Regression on the processed dataset
 
 Saving all artifacts:
+
 churn_model.pkl
+
 scaler.pkl
+
 model_columns.json
 
 Standardizing numeric features
@@ -42,8 +51,8 @@ Standardizing numeric features
 Preserving feature order during inference
 
 Training a Logistic Regression classifier
-#Features
- Web UI
+
+FEATURES (WEB UI)
 
 Users can input customer data through a Bootstrap-powered HTML form.
 The result page shows:
@@ -54,7 +63,7 @@ Colored text (red or green)
 
 Probability of churn
 
-#REST API
+REST API
 
 Send JSON to /predict and receive:
 
@@ -62,7 +71,7 @@ Predicted class (0 = Not Churn, 1 = Churn)
 
 Churn probability
 
-Flask-Based Backend
+Flask-Based Backend:
 
 Serves HTML templates
 
@@ -70,7 +79,7 @@ Handles form POST requests
 
 Runs model inference in real-time
 
-📁 Project Structure
+PROJECT STRUCTURE
 project/
 │
 ├── app.py
@@ -87,11 +96,11 @@ project/
     └── img/
         └── churn.jpg
 
-🔧 Installation & Setup
-1️. Install dependencies
+INSTALLATION & SETUP
+1. INSTALL DEPENDENCIES
 pip install flask pandas scikit-learn joblib
 
-2️. Ensure your ML artifacts are present
+2. ENSURE YOUR ML ARTIFACTS ARE PRESENT
 
 churn_model.pkl
 
@@ -99,17 +108,17 @@ scaler.pkl
 
 model_columns.json
 
-3️. Run the Flask app
+3. RUN THE FLASK APP
 python app.py
 
-4️. Open the application
+4. OPEN THE APPLICATION
 http://127.0.0.1:5000/
 
-API Usage
-Endpoint
+API USAGE
+ENDPOINT
 POST /predict
 
-Example JSON Request
+EXAMPLE JSON REQUEST
 {
   "Tenure_Months": 18,
   "Monthly_Charges": 72.3,
@@ -118,16 +127,13 @@ Example JSON Request
   "Churn_Value": 0
 }
 
-Example of JSON Response
-
-(Logistic Regression output)
-
+EXAMPLE JSON RESPONSE (LOGISTIC REGRESSION OUTPUT)
 {
   "prediction": 1,
   "probability": 0.8124
 }
 
-#Frontend Pages
+FRONTEND PAGES
 index.html
 
 Customer input form
@@ -140,15 +146,15 @@ result.html
 
 Shows prediction
 
-= Churn
+Red = Churn
 
-= Not Churn
+Green = Not Churn
 
 Displays churn probability
 
-Button to go back to home
+"Back to Home" button
 
-#Image Asset
+IMAGE ASSET
 
 Place your image inside:
 
@@ -157,10 +163,11 @@ static/img/churn.jpg
 
 Displayed at the top of the homepage.
 
+MODEL NOTES (LOGISTIC REGRESSION INSIGHTS)
 
-#Model Notes (Logistic Regression Insights)
+Logistic Regression:
 
-Logistic Regression outputs probabilities using the sigmoid function
+Outputs probabilities using the sigmoid function
 
 Ideal for churn classification due to:
 
@@ -178,9 +185,7 @@ Data is not highly nonlinear
 
 Multicollinearity is handled
 
-The model in this project is trained with all necessary preprocessing.
-
-#Contributions
+CONTRIBUTIONS
 
 You can contribute by:
 
@@ -194,7 +199,7 @@ Writing tests
 
 Pull requests are welcome.
 
-#Acknowledgements
+ACKNOWLEDGEMENTS
 
 Flask
 
@@ -206,15 +211,16 @@ Logistic Regression theory
 
 Pandas + joblib for ML integration
 
-#References
+REFERENCES
 
-Ouko, Allan. Customer Churn Prediction. github.com/AllanOuko/customer-churn-prediction-application/tree/main.
+Ouko, Allan. Customer Churn Prediction.
+https://github.com/AllanOuko/customer-churn-prediction-application/tree/main
 
-#App Input User Interface
+APP INPUT USER INTERFACE
 
 <img width="971" height="711" alt="Screenshot 2025-11-28 190536" src="https://github.com/user-attachments/assets/3eacb821-d24a-4226-99b8-e107156d7c91" />
 
-#App Result user Interface
+APP RESULT USER INTERFACE
 
 <img width="1886" height="964" alt="Screenshot 2025-11-28 190606" src="https://github.com/user-attachments/assets/0369badf-179b-4812-9ae0-645ce4d0eb8c" />
 
