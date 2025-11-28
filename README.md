@@ -97,6 +97,7 @@ project/
     └── img/
         └── churn.jpg
 
+
 INSTALLATION & SETUP
 1. INSTALL DEPENDENCIES
 pip install flask pandas scikit-learn joblib
