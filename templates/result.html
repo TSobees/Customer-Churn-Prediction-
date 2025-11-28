@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prediction Result</title>
+
+    <!-- Bootstrap -->
+    <link rel="stylesheet"
+          href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+          integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk"
+          crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+    <div class="container">
+        <div class="prediction-container">
+            <h1>Prediction Result</h1>
+
+            <p class="prediction">Model predicted that the customer is likely to:</p>
+
+            <!-- Display Churn or Not Churn -->
+            <h2 class="{% if prediction == 1 %}churn{% else %}not-churn{% endif %}">
+                {% if prediction == 1 %}
+                    Churn
+                {% else %}
+                    Not Churn
+                {% endif %}
+            </h2>
+
+            <p class="prediction">
+                Probability of Customer Churning: {{ probability }}
+            </p>
+
+            <br>
+            <a href="/" class="btn btn-primary">Go Back</a>
+        </div>
+    </div>
+</body>
+</html>

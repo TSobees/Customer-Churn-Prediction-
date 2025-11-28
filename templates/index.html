@@ -1,0 +1,106 @@
+<!DOCTYPE html>  
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link 
+        rel="stylesheet" 
+        href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css"
+    >
+
+    <style>
+        body {
+            background-color: #ddefff;
+        }
+        .form-box {
+            background: #ffffff;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 0 12px rgba(0,0,0,0.2);
+        }
+        .header-img {
+            width: 150px;
+            height: auto;
+        }
+    </style>
+
+    <title>Customer Churn Prediction</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="py-5 text-center">
+            <img class="d-block mx-auto mb-4 header-img" src="{{ url_for('static', filename='img/churn.jpg') }}" alt="logo">
+            <h2>Customer Churn Prediction</h2>
+            <p class="lead">Fill in the customer details to predict churn.</p>
+        </div>
+
+        <div class="row">
+            <div class="col-md-2"></div>
+
+            <div class="col-md-8 form-box">
+                <h4 class="mb-3">Customer Details</h4>
+
+                <!-- Correct form action -->
+                <form action="{{ url_for('form_predict') }}" method="POST">
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Tenure_Months">Tenure (Months)</label>
+                            <input type="number" step="any" class="form-control" id="Tenure_Months" 
+                                   name="Tenure_Months" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="Monthly_Charges">Monthly Charges</label>
+                            <input type="number" step="any" class="form-control" id="Monthly_Charges" 
+                                   name="Monthly_Charges" required>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="Churn_Score">Churn Score</label>
+                            <input type="number" step="any" class="form-control" id="Churn_Score" 
+                                   name="Churn_Score" required>
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="CLTV">CLTV</label>
+                            <input type="number" step="any" class="form-control" id="CLTV" 
+                                   name="CLTV" required>
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="Churn_Value">Churn Value</label>
+                        <input type="number" step="any" class="form-control" id="Churn_Value" 
+                               name="Churn_Value" required>
+                    </div>
+
+                    <button class="btn btn-primary btn-lg btn-block" type="submit">
+                        Predict
+                    </button>
+
+                </form>
+
+            </div>
+
+            <div class="col-md-2"></div>
+        </div>
+
+        <footer class="my-5 pt-5 text-muted text-center text-small">
+            <p class="mb-1">&copy; 2024 - Customer Churn Prediction</p>
+        </footer>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+
+</body>
+</html>

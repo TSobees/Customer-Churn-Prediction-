@@ -1,0 +1,86 @@
+/* ---------- Global Styles ---------- */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #cfe8fe;
+    margin: 0;
+    padding: 20px;
+    color: #333;
+}
+
+/* ---------- Page Title ---------- */
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* ---------- Form Container ---------- */
+form {
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 8px;
+    max-width: 600px;
+    margin: 0 auto;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.15);
+}
+
+/* ---------- Form Labels ---------- */
+label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 6px;
+}
+
+/* ---------- Input Fields ---------- */
+input[type="text"],
+input[type="number"],
+select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #b8b8b8;
+    margin-bottom: 15px;
+    box-sizing: border-box;
+}
+
+/* ---------- Submit Button ---------- */
+input[type="submit"] {
+    background-color: #4CAF50;
+    color: #ffffff;
+    padding: 12px 18px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    width: 100%;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 10px;
+}
+
+input[type="submit"]:hover {
+    background-color: #45a049;
+}
+
+/* ---------- Prediction Output ---------- */
+.prediction-container {
+    text-align: center;
+    margin-top: 20px;
+    padding: 15px;
+}
+
+.prediction {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.churn {
+    color: darkred;
+}
+
+.not-churn {
+    color: green;
+}
+
+/* ---------- Center Utility ---------- */
+.center-container {
+    text-align: center;
+}
