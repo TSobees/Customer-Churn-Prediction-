@@ -95,6 +95,7 @@ project/
     ├── style.css
     └── img/
         └── churn.jpg
+<img width="321" height="479" alt="Screenshot 2025-11-28 201307" src="https://github.com/user-attachments/assets/4cb8af94-2a21-4338-b865-ab369aec0f72" />
 
 
 INSTALLATION & SETUP
