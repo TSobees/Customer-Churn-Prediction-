@@ -1,7 +1,7 @@
 # Customer-Churn-Prediction-
 A machine learning project to predict customer churn integrating Web API FastAPI
 
-Customer Churn Prediction System (ML Model + FastAPI Web API)
+#Customer Churn Prediction System (ML Model + FastAPI Web API)
 Dataset source: https://www.kaggle.com/datasets/abdallahwagih/telco-customer-churn?resource=download&select=Telco_customer_churn.xlsx
 
 This project provides an end-to-end Machine Learning solution for predicting customer churn. It includes:
@@ -11,7 +11,7 @@ SHAP model interpretability
 A production-ready FastAPI Web API for real-time predictions
 Saved model artifacts (.pkl files) and JSON feature mappings
 
-This project uses a Logistic Regression classifier, which is a widely used linear model for binary classification problems like churn prediction.
+#This project uses a Logistic Regression classifier, which is a widely used linear model for binary classification problems like churn prediction.
 
 Why Logistic Regression?
 
@@ -23,7 +23,7 @@ Efficient on large datasets
 
 Stable, reliable probability outputs
 
-Key Steps in the ML Pipeline
+#Key Steps in the ML Pipeline
 
 Handling missing data; the missing values where the churn reason which was excluded from the model training
 
@@ -42,7 +42,7 @@ Standardizing numeric features
 Preserving feature order during inference
 
 Training a Logistic Regression classifier
-Features
+#Features
  Web UI
 
 Users can input customer data through a Bootstrap-powered HTML form.
@@ -54,7 +54,7 @@ Colored text (red or green)
 
 Probability of churn
 
-REST API
+#REST API
 
 Send JSON to /predict and receive:
 
@@ -127,7 +127,7 @@ Example of JSON Response
   "probability": 0.8124
 }
 
-Frontend Pages
+#Frontend Pages
 index.html
 
 Customer input form
@@ -148,7 +148,7 @@ Displays churn probability
 
 Button to go back to home
 
-Image Asset
+#Image Asset
 
 Place your image inside:
 
@@ -158,7 +158,7 @@ static/img/churn.jpg
 Displayed at the top of the homepage.
 
 
-Model Notes (Logistic Regression Insights)
+#Model Notes (Logistic Regression Insights)
 
 Logistic Regression outputs probabilities using the sigmoid function
 
@@ -180,7 +180,7 @@ Multicollinearity is handled
 
 The model in this project is trained with all necessary preprocessing.
 
-Contributions
+#Contributions
 
 You can contribute by:
 
@@ -194,7 +194,7 @@ Writing tests
 
 Pull requests are welcome.
 
-Acknowledgements
+#Acknowledgements
 
 Flask
 
@@ -206,11 +206,15 @@ Logistic Regression theory
 
 Pandas + joblib for ML integration
 
-References
+#References
+
 Ouko, Allan. Customer Churn Prediction. github.com/AllanOuko/customer-churn-prediction-application/tree/main.
 
-App Input User Interface
+#App Input User Interface
+
 <img width="971" height="711" alt="Screenshot 2025-11-28 190536" src="https://github.com/user-attachments/assets/3eacb821-d24a-4226-99b8-e107156d7c91" />
-App Result user Interface
+
+#App Result user Interface
+
 <img width="1886" height="964" alt="Screenshot 2025-11-28 190606" src="https://github.com/user-attachments/assets/0369badf-179b-4812-9ae0-645ce4d0eb8c" />
 
