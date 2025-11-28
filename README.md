@@ -80,6 +80,7 @@ Handles form POST requests
 Runs model inference in real-time
 
 PROJECT STRUCTURE
+
 project/
 │
 ├── app.py
