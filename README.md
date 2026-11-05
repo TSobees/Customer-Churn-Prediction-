@@ -1,231 +1,101 @@
-# CUSTOMER-CHURN-PREDICTION-
-A MACHINE LEARNING PROJECT TO PREDICT CUSTOMER CHURN INTEGRATING WEB API (FASTAPI)
-CUSTOMER CHURN PREDICTION SYSTEM (ML MODEL + FASTAPI WEB API)
+# Customer Churn Prediction
 
-# Dataset source: https://www.kaggle.com/datasets/abdallahwagih/telco-customer-churn?resource=download&select=Telco_customer_churn.xlsx
+[![Project checks](https://github.com/TSobees/Customer-Churn-Prediction-/actions/workflows/checks.yml/badge.svg)](https://github.com/TSobees/Customer-Churn-Prediction-/actions/workflows/checks.yml)
 
-This project provides an end-to-end Machine Learning solution for predicting customer churn. It includes:
+A runnable logistic regression project with a responsive Flask interface, a JSON
+endpoint and an optional FastAPI adapter. The preprocessing and classifier are
+saved together, so both APIs use exactly the same input contract.
 
-Data preprocessing & feature engineering
+**Educational snapshot classification.** No validated future churn horizon or
+production readiness is claimed. The revised model excludes IDs and churn outcome
+fields, including `Churn Value`, `Churn Reason` and `Churn Score`.
 
-Model training & evaluation
+![Customer input form with fictional example values](docs/images/customer_form.jpg)
 
-SHAP model interpretability
+## Quick start
 
-A production-ready FastAPI Web API for real-time predictions
+Use Python 3.12 or 3.13 from the repository root:
 
-Saved model artifacts (.pkl files) and JSON feature mappings
-
-# THIS PROJECT USES A LOGISTIC REGRESSION CLASSIFIER
-
-Why Logistic Regression?
-
-Easy to interpret
-
-Works well with linearly separable data
-
-Efficient on large datasets
-
-Stable, reliable probability outputs
-
-# KEY STEPS IN THE ML PIPELINE
-
-Handling missing data; the missing values were the churn reason which was excluded from model training
-
-Label encoding & One-Hot Encoding
-
-Export of correct column order via model_columns.json
-
-Fitting Logistic Regression on the processed dataset
-
-Saving all artifacts:
-
-churn_model.pkl
-
-scaler.pkl
-
-model_columns.json
-
-Standardizing numeric features
-
-Preserving feature order during inference
-
-Training a Logistic Regression classifier
-
-# FEATURES (WEB UI)
-
-Users can input customer data through a Bootstrap-powered HTML form.
-The result page shows:
-
-Churn / Not Churn prediction
-
-Colored text (red or green)
-
-Probability of churn
-
-#REST API
-
-Send JSON to /predict and receive:
-
-Predicted class (0 = Not Churn, 1 = Churn)
-
-Churn probability
-
-Flask-Based Backend:
-
-Serves HTML templates
-
-Handles form POST requests
-
-Runs model inference in real-time
-
-# 📁 Project Structure
-project/
-│
-├── app.py
-├── churn_model.pkl
-├── scaler.pkl
-├── model_columns.json
-│
-├── templates/
-│   ├── index.html
-│   └── result.html
-│
-└── static/
-    ├── style.css
-    └── img/
-        └── churn.jpg
-        
-<img width="321" height="479" alt="Screenshot 2025-11-28 201307" src="https://github.com/user-attachments/assets/4cb8af94-2a21-4338-b865-ab369aec0f72" />
-
-
-# INSTALLATION & SETUP
-1. INSTALL DEPENDENCIES
-pip install flask pandas scikit-learn joblib
-
-2. ENSURE YOUR ML ARTIFACTS ARE PRESENT
-
-churn_model.pkl
-
-scaler.pkl
-
-model_columns.json
-
-3. RUN THE FLASK APP
+```sh
+python -m venv .venv
+# Windows: .venv\Scripts\activate
+# Linux/macOS: source .venv/bin/activate
+python -m pip install -r requirements.txt
 python app.py
+```
 
-4. OPEN THE APPLICATION
-http://127.0.0.1:5000/
+Open <http://127.0.0.1:5000>. The form is prefilled with fictional example inputs.
+Every model feature is explicit; unknown categories, inconsistent service options,
+missing required fields and nonfinite numbers produce clear errors. Total Charges
+may be unknown and is then imputed by the fitted training pipeline. Inputs are not saved.
 
-#API USAGE
-ENDPOINT
-POST /predict
+## JSON API
 
-# EXAMPLE JSON REQUEST
-{
-  "Tenure_Months": 18,
-  "Monthly_Charges": 72.3,
-  "Churn_Score": 41,
-  "CLTV": 3980,
-  "Churn_Value": 0
-}
+`POST /predict` accepts the exact field names in [the example request](examples/customer.json):
 
-#EXAMPLE JSON RESPONSE (LOGISTIC REGRESSION OUTPUT)
-{
-  "prediction": 1,
-  "probability": 0.8124
-}
+```sh
+curl -X POST http://127.0.0.1:5000/predict -H "Content-Type: application/json" --data-binary @examples/customer.json
+```
 
-# FRONTEND PAGES
-index.html
+The response includes `prediction`, `label`, `probability`, `threshold` and scope.
+`GET /health` checks model readiness; `GET /api/model-info` exposes aggregate test
+metrics and provenance. These endpoints do not expose the dataset's customer rows.
 
-Customer input form
+For FastAPI and interactive API docs:
 
-Bootstrap & custom CSS
+```sh
+python -m pip install -r requirements-api.txt
+python -m uvicorn main:app --host 127.0.0.1
+```
 
-Displays project image (churn.jpg)
+Open <http://127.0.0.1:8000/docs>. Both adapters use the same inference function.
 
-result.html
+## Train and inspect
 
-Shows prediction
+```sh
+python -m churn.train
+python -m churn.train --data data/Telco_customer_churn.csv --output-dir outputs/another-model
+```
 
-Red = Churn
+The default writes `models/churn_pipeline.joblib` and `models/metadata.json`. Numeric
+preprocessing and one-hot encoding fit only on training data. Evaluation uses a
+fixed stratified 80/20 split and a 0.5 decision threshold. The test is not temporal
+or external validation. See [model card](docs/MODEL_CARD.md), [measured evaluation](docs/EVALUATION.md) and the
+[walkthrough notebook](notebooks/Churn_walkthrough.ipynb).
 
-Green = Not Churn
+## Layout
 
-Displays churn probability
+```text
+churn/                  Shared schema, pipeline training and inference
+app.py, main.py         Flask and optional FastAPI adapters
+models/                 Compact trained pipeline and measured metadata
+templates/, static/     Responsive web interface using local CSS
+data/                   Original CSV and its source notes
+examples/               Valid fictional JSON request
+notebooks/              Reproducible walkthrough without personal file paths
+tests/                  Input, inference and cross-API regression checks
+docs/                   Model contract and limitations
+```
 
-"Back to Home" button
+Generated Python caches and obsolete root-level pickle/column files have been
+removed. They remain in Git history. **API compatibility change:** clients must
+send the new explicit schema; `Churn_Value`, `Churn_Score` and the former five-field
+request are no longer accepted, because outcomes cannot be prediction inputs.
 
-# IMAGE ASSET
+## Tests
 
-Place your image inside:
+```sh
+python -m pip install -r requirements-dev.txt
+python -m unittest discover -s tests -v
+```
 
-static/img/churn.jpg
+CI compiles Python, checks both APIs and retrains the baseline on Python 3.12 and
+3.13. Test metrics are measured from the supplied snapshot, not a business guarantee.
 
+## Attribution and license
 
-Displayed at the top of the homepage.
-
-# MODEL NOTES (LOGISTIC REGRESSION INSIGHTS)
-
-Logistic Regression:
-
-Outputs probabilities using the sigmoid function
-
-Ideal for churn classification due to:
-
-Binary nature (0 or 1)
-
-Well-calibrated probability outputs
-
-Coefficients help interpret feature impact on churn
-
-Works best when:
-
-Features are scaled
-
-Data is not highly nonlinear
-
-Multicollinearity is handled
-
-# CONTRIBUTIONS
-
-You can contribute by:
-
-Improving the model
-
-Adding new features
-
-Enhancing UI
-
-Writing tests
-
-Pull requests are welcome.
-
-# ACKNOWLEDGEMENTS
-
-Flask
-
-Scikit-learn
-
-Bootstrap CSS
-
-Logistic Regression theory
-
-Pandas + joblib for ML integration
-
-# REFERENCES
-
-Ouko, Allan. Customer Churn Prediction.
-https://github.com/AllanOuko/customer-churn-prediction-application/tree/main
-
-# APP INPUT USER INTERFACE
-
-<img width="971" height="711" alt="Screenshot 2025-11-28 190536" src="https://github.com/user-attachments/assets/3eacb821-d24a-4226-99b8-e107156d7c91" />
-
-# APP RESULT USER INTERFACE
-
-<img width="1886" height="964" alt="Screenshot 2025-11-28 190606" src="https://github.com/user-attachments/assets/0369badf-179b-4812-9ae0-645ce4d0eb8c" />
-
-
-
+Author: Sobanjo Oluwatosin. The original project cited
+[Allan Ouko's churn application](https://github.com/AllanOuko/customer-churn-prediction-application).
+That attribution is retained. AI assisted this revision's shared pipeline, input
+validation, interface, tests and documentation. Code: [MIT](LICENSE.txt).
+Dataset provenance and third-party rights: [data notes](data/README.md).
