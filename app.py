@@ -1,128 +1,42 @@
-# --------------------------
-# IMPORTS
-# --------------------------
-from flask import Flask, request, jsonify, render_template
-import pandas as pd
-import joblib
-import json
+"""Flask UI and JSON endpoint sharing the same validated model contract."""
+from flask import Flask,request,jsonify,render_template
+from churn.schema import NUMERIC,CHOICES,EXAMPLE
+from churn.inference import predict,load_bundle
 
-# --------------------------
-# INITIALIZE FLASK APP
-# --------------------------
-app = Flask(__name__)
+def create_app(model_dir=None):
+    app=Flask(__name__)
+    app.config.update(MAX_CONTENT_LENGTH=64*1024)
+    def home(error=None,values=None,status=200):
+        return render_template('index.html',numeric=NUMERIC,choices=CHOICES,values=values or EXAMPLE,error=error),status
+    @app.get('/')
+    def index(): return home()
+    @app.get('/health')
+    def health():
+        try:
+            _,meta=load_bundle(model_dir)
+            return jsonify(ready=True,model=meta['algorithm'],dataset_sha256=meta['dataset_sha256'])
+        except (OSError,ValueError) as error: return jsonify(ready=False,error=str(error)),503
+    @app.get('/api/model-info')
+    def info():
+        try: return jsonify(load_bundle(model_dir)[1])
+        except (OSError,ValueError) as error: return jsonify(error=str(error)),503
+    @app.post('/predict')
+    def predict_json():
+        try: return jsonify(predict(request.get_json(silent=True),model_dir))
+        except ValueError as error: return jsonify(error=str(error)),400
+        except OSError: return jsonify(error='Model unavailable. Run python -m churn.train.'),503
+    @app.post('/form_predict')
+    def form_predict():
+        try: return render_template('result.html',result=predict(request.form.to_dict(),model_dir))
+        except ValueError as error: return home(str(error),request.form.to_dict(),400)
+        except OSError: return home('Model unavailable. Run python -m churn.train.',request.form.to_dict(),503)
+    @app.after_request
+    def headers(response):
+        response.headers['X-Content-Type-Options']='nosniff';response.headers['X-Frame-Options']='DENY'
+        response.headers['Cache-Control']='no-store'
+        response.headers['Content-Security-Policy']="default-src 'self'; style-src 'self'; img-src 'self'; frame-ancestors 'none'; base-uri 'self'; form-action 'self'"
+        return response
+    return app
 
-# --------------------------
-# LOAD MODEL, SCALER, AND COLUMNS
-# --------------------------
-model = joblib.load("churn_model.pkl")
-scaler = joblib.load("scaler.pkl")
-
-with open("model_columns.json", "r") as f:
-    model_columns = json.load(f)
-
-
-# ---------------------------------------------------
-# STEP 2: HOME ROUTE  (Fixes 404 error)
-# ---------------------------------------------------
-@app.route("/", methods=["GET"])
-def home_page():
-    return render_template("index.html")
-
-
-# ---------------------------------------------------
-# HTML FORM PREDICTION ROUTE
-# ---------------------------------------------------
-@app.route("/form_predict", methods=["POST"])
-def form_predict():
-
-    # Collect form inputs
-    data = {
-        "Tenure_Months": float(request.form.get("Tenure_Months")),
-        "Monthly_Charges": float(request.form.get("Monthly_Charges")),
-        "Churn_Score": float(request.form.get("Churn_Score")),
-        "CLTV": float(request.form.get("CLTV")),
-        "Churn_Value": float(request.form.get("Churn_Value"))
-    }
-
-    # Convert to DataFrame
-    input_cp = pd.DataFrame([data])
-
-    # Rename fields to training column names
-    rename_map = {
-        "Tenure_Months": "Tenure Months",
-        "Monthly_Charges": "Monthly Charges",
-        "Churn_Score": "Churn Score",
-        "CLTV": "CLTV",
-        "Churn_Value": "Churn Value"
-    }
-    input_cp = input_cp.rename(columns=rename_map)
-
-    # Add missing one-hot columns
-    for col in model_columns:
-        if col not in input_cp:
-            input_cp[col] = 0
-
-    # Reorder
-    input_cp = input_cp[model_columns]
-
-    # Scale numerics
-    num_cols = ["Tenure Months", "Monthly Charges", "Churn Score", "CLTV", "Churn Value"]
-    input_cp[num_cols] = scaler.transform(input_cp[num_cols])
-
-    # Predict
-    prediction = int(model.predict(input_cp)[0])
-    probability = float(model.predict_proba(input_cp)[0][1])
-
-    result_text = "Churn" if prediction == 1 else "Not Churn"
-
-    return render_template(
-        "result.html",
-        data={
-            "prediction": result_text,
-            "predict_probabality": round(probability, 4)
-        }
-    )
-
-
-# ---------------------------------------------------
-# ORIGINAL JSON API PREDICTION ROUTE (still works)
-# ---------------------------------------------------
-@app.route("/predict", methods=["POST"])
-def predict_churn():
-
-    data = request.get_json()
-    input_cp = pd.DataFrame([data])
-
-    rename_map = {
-        "Tenure_Months": "Tenure Months",
-        "Monthly_Charges": "Monthly Charges",
-        "Churn_Score": "Churn Score",
-        "CLTV": "CLTV",
-        "Churn_Value": "Churn Value"
-    }
-
-    input_cp = input_cp.rename(columns=rename_map)
-
-    for col in model_columns:
-        if col not in input_cp:
-            input_cp[col] = 0
-
-    input_cp = input_cp[model_columns]
-
-    num_cols = ["Tenure Months", "Monthly Charges", "Churn Score", "CLTV", "Churn Value"]
-    input_cp[num_cols] = scaler.transform(input_cp[num_cols])
-
-    prediction = int(model.predict(input_cp)[0])
-    probability = float(model.predict_proba(input_cp)[0][1])
-
-    return jsonify({
-        "prediction": prediction,
-        "probability": probability
-    })
-
-
-# --------------------------
-# RUN FLASK APP
-# --------------------------
-if __name__ == "__main__":
-    app.run(debug=True)
+app=create_app()
+if __name__=='__main__': app.run(host='127.0.0.1',port=5000,debug=False)
